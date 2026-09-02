@@ -84,10 +84,13 @@
      PAGE 1 — CREATIVE SEARCH
      ====================================================================== */
 
-  const state = { query: '', quick: 'all', type: '', licence: '', platform: '', reuse: '' };
+  // `query` is lowercased for matching; `raw` preserves what was typed, because
+  // URLs are case-sensitive (a YouTube id like fAfr-wqxY78 must survive intact).
+  const state = { query: '', raw: '', quick: 'all', type: '', licence: '', platform: '', reuse: '' };
 
   const resultsEl = $('#results');
   const emptyEl = $('#emptyState');
+  const handoffEl = $('#urlHandoff');
   const metaEl = $('#resultsMeta');
   const titleEl = $('#resultsTitle');
   const advCountEl = $('#advCount');
@@ -99,6 +102,118 @@
     music: 'Music',
     campaign: 'Campaigns',
     free: 'Free to reuse'
+  };
+
+  /*
+   * A pasted link cannot match the reference library, so it is treated as a
+   * different intent: screen this source. Deliberately conservative — a plain
+   * phrase like "soft surrealism" must not be read as a URL.
+   */
+  const isLikelyUrl = (q) => (
+    /^(https?:\/\/|www\.)\S+$/i.test(q) ||
+    /^[\w-]+(\.[\w-]+)+(\/\S*)?$/.test(q)
+  );
+
+  /*
+   * Recognise the platform behind a pasted link. Pasted YouTube links are the
+   * expected common case, so the handoff is presented in the same card language
+   * as a search result rather than as a failed query.
+   *
+   * `licence` states the platform's DEFAULT position, which is what people get
+   * wrong: a public video is not a licensed one. Nothing here is fetched — the
+   * platform is inferred from the string only.
+   */
+  const PLATFORMS = [
+    {
+      match: /(?:youtube\.com|youtu\.be)/i,
+      name: 'YouTube',
+      type: 'video',
+      swatch: 'clay',
+      id: /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([\w-]{11})/i,
+      idLabel: 'Video ID',
+      licence: 'All rights reserved',
+      note: 'YouTube\u2019s Standard Licence reserves all rights to the uploader, and public availability is not permission. A minority of videos are published under CC BY \u2014 open the description and look for an explicit licence line before assuming you can reuse anything. Downloading to re-edit also breaches the platform terms regardless of copyright.'
+    },
+    {
+      match: /vimeo\.com/i,
+      name: 'Vimeo',
+      type: 'video',
+      swatch: 'tide',
+      id: /vimeo\.com\/(?:video\/)?(\d+)/i,
+      idLabel: 'Video ID',
+      licence: 'All rights reserved',
+      note: 'Vimeo uploads default to all rights reserved, though creators can attach a Creative Commons licence that is shown on the video page. Check for one there before relying on reuse.'
+    },
+    {
+      match: /(?:open\.spotify\.com|soundcloud\.com|music\.apple\.com|bandcamp\.com)/i,
+      name: 'Streaming platform',
+      type: 'music',
+      swatch: 'bloom',
+      licence: 'Playback only',
+      note: 'A streaming subscription licences listening, never reuse. Music also carries two separate layers \u2014 the sound recording (master) and the composition (publishing) \u2014 and both need clearing before a track goes into anything you publish.'
+    },
+    {
+      match: /(?:instagram\.com|tiktok\.com|x\.com|twitter\.com|facebook\.com)/i,
+      name: 'Social platform',
+      type: 'video',
+      swatch: 'ink',
+      licence: 'Creator retains rights',
+      note: 'Platform terms let the platform host and display a post; they grant you nothing. Embedding is usually safer than reposting, because it leaves the work on the creator\u2019s account under their control.'
+    },
+    {
+      match: /(?:unsplash\.com|pexels\.com|flickr\.com|500px\.com)/i,
+      name: 'Photo library',
+      type: 'image',
+      swatch: 'sand',
+      licence: 'Varies per image',
+      note: 'Licences differ image by image on these sites, and identifiable people or private property can still need releases even where the photographer has granted a broad licence.'
+    },
+    {
+      match: /(?:behance\.net|dribbble\.com|pinterest\.)/i,
+      name: 'Portfolio platform',
+      type: 'design',
+      swatch: 'amber',
+      licence: 'Portfolio display only',
+      note: 'Work shown in a portfolio is presented to be seen, not reused, and much of it is already owned by the client who commissioned it rather than the person who posted it.'
+    },
+    {
+      match: /(?:wikipedia\.org|wikimedia\.org)/i,
+      name: 'Wikimedia',
+      type: 'image',
+      swatch: 'olive',
+      licence: 'Usually CC BY-SA',
+      note: 'Most Wikimedia media is reusable with attribution, but the licence is set per file and share-alike terms can extend to your own work. Open the file page for the exact licence and required credit.'
+    },
+    {
+      match: /(?:medium\.com|substack\.com)/i,
+      name: 'Publishing platform',
+      type: 'text',
+      swatch: 'moss',
+      licence: 'Author retains rights',
+      note: 'The author keeps copyright in the text. Short quotations with credit are the safe pattern; republishing a piece in full needs permission.'
+    }
+  ];
+
+  const GENERIC_PLATFORM = {
+    name: 'External source',
+    type: 'image',
+    swatch: 'moss',
+    licence: 'Not established',
+    note: 'Nothing about this address tells you who owns the work or on what terms. Find the licence at the source, and record it, before treating anything here as reusable.'
+  };
+
+  function readSource(url) {
+    const p = PLATFORMS.find((entry) => entry.match.test(url)) || GENERIC_PLATFORM;
+    const found = p.id && url.match(p.id);
+    return { ...p, foundId: found ? found[1] : null };
+  }
+
+  const hostOf = (url) => {
+    try {
+      return new URL(/^https?:\/\//i.test(url) ? url : `https://${url}`).hostname.replace(/^www\./, '');
+    } catch (err) {
+      return null;
+    }
   };
 
   const haystack = (w) => [
@@ -139,15 +254,51 @@
       </article>`;
   }
 
+  function renderHandoff(url) {
+    const src = readSource(url);
+    const host = hostOf(url);
+
+    $('#handoffVisual').style.background = SWATCHES[src.swatch];
+    $('#handoffKind').textContent = src.type;
+    $('#handoffPlatform').textContent = src.name;
+
+    const facts = [
+      ['Platform', esc(src.name)],
+      ['Content type', esc(src.type)],
+      src.foundId ? [esc(src.idLabel), `<code>${esc(src.foundId)}</code>`] : null,
+      ['Default licence', `<span class="badge badge-permission">${esc(src.licence)}</span>`],
+      ['Address carried across', `<code class="fact-url">${esc(url)}</code>`, 'fact-wide']
+    ].filter(Boolean);
+
+    const factsEl = $('#handoffFacts');
+    factsEl.innerHTML = facts
+      .map(([k, v, cls]) => `<div class="fact ${cls || ''}"><dt>${k}</dt><dd>${v}</dd></div>`)
+      .join('');
+    // Column count tracks the fact count, so the grid never leaves an empty cell.
+    factsEl.style.setProperty('--cols', facts.filter(([, , cls]) => !cls).length);
+
+    $('#handoffNote').textContent = src.note;
+    $('#handoffHint').textContent = host
+      ? `No request is made to ${host} — the platform is inferred from the address alone, so the licence and context are still yours to confirm.`
+      : 'Nothing is fetched or analysed automatically — the licence and context are yours to confirm.';
+  }
+
   function renderResults() {
     const hits = CREATIVE_WORKS.filter(matches);
 
-    resultsEl.innerHTML = hits.map(cardMarkup).join('');
-    emptyEl.hidden = hits.length > 0;
+    const asUrl = state.raw && isLikelyUrl(state.raw);
 
-    titleEl.textContent = state.query
-      ? `Results for “${state.query}”`
-      : QUICK_TITLES[state.quick];
+    resultsEl.innerHTML = hits.map(cardMarkup).join('');
+    handoffEl.hidden = !(asUrl && hits.length === 0);
+    emptyEl.hidden = hits.length > 0 || !handoffEl.hidden;
+
+    if (asUrl) renderHandoff(state.raw);
+
+    titleEl.textContent = asUrl
+      ? 'Link detected'
+      : state.raw
+        ? `Results for “${state.raw}”`
+        : QUICK_TITLES[state.quick];
 
     metaEl.textContent = `${hits.length} of ${CREATIVE_WORKS.length} references`;
 
@@ -156,22 +307,23 @@
     advCountEl.textContent = `${active} active`;
   }
 
+  function setQuery(value) {
+    state.raw = value.trim();
+    state.query = state.raw.toLowerCase();
+    renderResults();
+  }
+
   $('#searchForm').addEventListener('submit', (e) => {
     e.preventDefault();
-    state.query = $('#searchInput').value.trim().toLowerCase();
-    renderResults();
+    setQuery($('#searchInput').value);
   });
 
-  $('#searchInput').addEventListener('input', (e) => {
-    state.query = e.target.value.trim().toLowerCase();
-    renderResults();
-  });
+  $('#searchInput').addEventListener('input', (e) => setQuery(e.target.value));
 
   $$('[data-suggest]').forEach((btn) => {
     btn.addEventListener('click', () => {
       $('#searchInput').value = btn.dataset.suggest;
-      state.query = btn.dataset.suggest.toLowerCase();
-      renderResults();
+      setQuery(btn.dataset.suggest);
       $('#results').scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
@@ -216,12 +368,26 @@
   bindSelect('#fReuse', 'reuse');
 
   function resetSearch() {
-    Object.assign(state, { query: '', quick: 'all', type: '', licence: '', platform: '', reuse: '' });
+    Object.assign(state, { query: '', raw: '', quick: 'all', type: '', licence: '', platform: '', reuse: '' });
     $('#searchInput').value = '';
     ['#fType', '#fLicence', '#fPlatform', '#fReuse'].forEach((id) => { $(id).value = ''; });
     syncQuickChips();
     renderResults();
   }
+
+  $('#handoffGo').addEventListener('click', () => {
+    const src = readSource(state.raw);
+
+    $('#cSource').value = state.raw;
+    $('#cType').value = src.type;
+    // A pasted link is exactly the "licence not established yet" case.
+    $('#cLicence').value = 'unknown';
+
+    location.hash = '#checker';
+    $('#cSource').focus({ preventScroll: true });
+  });
+
+  $('#handoffClear').addEventListener('click', resetSearch);
 
   $('#clearFilters').addEventListener('click', resetSearch);
   $('#emptyReset').addEventListener('click', resetSearch);

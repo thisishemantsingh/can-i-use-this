@@ -175,6 +175,36 @@
 
     <div class="card-grid" id="results" aria-live="polite"></div>
 
+    <div class="url-handoff panel" id="urlHandoff" hidden>
+      <div class="handoff-visual" id="handoffVisual">
+        <span class="handoff-kind" id="handoffKind">link</span>
+        <span class="handoff-platform" id="handoffPlatform">External source</span>
+      </div>
+
+      <div class="handoff-body">
+        <p class="eyebrow"><span class="dot"></span> Link detected</p>
+        <h3 class="handoff-title">Screen this link in the Rights Checker</h3>
+        <p class="handoff-sub">
+          Search matches creative references by name, style and licence, so a URL will never match it.
+          Carry the address into the checker instead — it goes across exactly as you typed it.
+        </p>
+
+        <dl class="handoff-facts" id="handoffFacts"></dl>
+
+        <p class="handoff-note" id="handoffNote"></p>
+
+        <div class="handoff-actions">
+          <button class="btn btn-primary" type="button" id="handoffGo">
+            Screen this link
+            <svg viewBox="0 0 14 14" width="13" height="13" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="btn btn-ghost btn-sm" type="button" id="handoffClear">Clear search</button>
+        </div>
+
+        <p class="handoff-hint" id="handoffHint"></p>
+      </div>
+    </div>
+
     <div class="empty" id="emptyState" hidden>
       <p class="empty-title">No references match those filters.</p>
       <p class="empty-sub">Try a broader search term or clear the advanced filters.</p>

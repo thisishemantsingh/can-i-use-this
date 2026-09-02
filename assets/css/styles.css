@@ -365,6 +365,78 @@ select:focus,textarea:focus{outline:none;border-color:var(--primary);box-shadow:
 .badge-permission{background:rgba(168,60,53,.11);color:var(--danger);border-color:rgba(168,60,53,.28)}
 .licence-text{font-size:.8rem;color:var(--muted)}
 
+.url-handoff{
+  display:grid;grid-template-columns:236px minmax(0,1fr);
+  overflow:hidden;padding:0;
+  border-color:var(--line-strong);
+  animation:pageIn .32s cubic-bezier(.2,.7,.3,1) both;
+}
+
+.handoff-visual{
+  position:relative;
+  display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;
+  gap:13px;padding:20px;min-height:210px;
+}
+.handoff-visual::after{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(120% 90% at 15% 0%, rgba(255,254,250,.32), transparent 62%);
+}
+.handoff-kind,.handoff-platform{position:relative;z-index:1}
+.handoff-kind{
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,254,250,.94);
+  background:rgba(22,35,30,.32);padding:5px 12px;border-radius:var(--r-pill);
+  backdrop-filter:blur(4px);
+}
+.handoff-platform{
+  font-family:var(--serif);font-size:1.5rem;font-weight:600;line-height:1.15;
+  color:#FFFEFA;letter-spacing:-.02em;
+  text-shadow:0 1px 12px rgba(22,35,30,.28);
+}
+
+.handoff-body{padding:24px;display:flex;flex-direction:column;align-items:flex-start;gap:14px}
+.handoff-title{font-size:1.32rem}
+.handoff-sub{color:var(--muted);font-size:.94rem;max-width:62ch}
+
+.handoff-facts{
+  display:grid;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));
+  gap:1px;margin:2px 0 0;width:100%;
+  background:var(--line);border:1px solid var(--line);border-radius:var(--r-md);
+  overflow:hidden;
+}
+.handoff-facts .fact{background:var(--surface);padding:11px 13px;min-width:0}
+.handoff-facts dt{
+  font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);
+}
+.handoff-facts dd{
+  margin:5px 0 0;font-size:.9rem;min-width:0;
+  text-transform:capitalize;
+}
+.handoff-facts dd code{
+  font-family:var(--mono);font-size:.82rem;color:var(--primary-deep);
+  text-transform:none;
+}
+.handoff-facts dd .badge{text-transform:none}
+.handoff-facts .fact-wide{grid-column:1/-1}
+.fact-url{display:block;overflow-x:auto;white-space:nowrap;padding-bottom:2px}
+
+.handoff-note{
+  font-size:.9rem;color:var(--muted);max-width:70ch;
+  padding:13px 15px;border-left:3px solid var(--warning);
+  background:rgba(243,191,87,.12);
+  border-radius:0 var(--r-sm) var(--r-sm) 0;
+}
+.handoff-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.handoff-hint{font-size:.82rem;color:var(--muted);max-width:66ch}
+
+@media (max-width:720px){
+  .url-handoff{grid-template-columns:1fr}
+  .handoff-facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .handoff-visual{min-height:132px;flex-direction:row;align-items:center}
+  .handoff-body{padding:20px}
+}
+
 .empty{
   text-align:center;padding:62px 20px;
   background:var(--surface);border:1px dashed var(--line-strong);border-radius:var(--r-lg);

@@ -37,13 +37,32 @@ actually be reusable, and the law that applies where you publish.
 
 | Page | What it does |
 | --- | --- |
-| **Search** | Full-text search across sample creative references with quick category chips (images, video, music, campaigns, free to reuse) and advanced filters for content type, licence, platform and reuse status. Each result shows title, category, style description, licence status and reuse signal. |
+| **Search** | Full-text search across sample creative references with quick category chips (images, video, music, campaigns, free to reuse) and advanced filters for content type, licence, platform and reuse status. Each result shows title, category, style description, licence status and reuse signal. Paste a **link** and it is recognised as a different intent — see below. |
 | **Trending** | Creative formats gaining momentum across design, social, film and audio — with search growth, usage growth, mentions and saves, plus a note on how safely each *look* can be borrowed. |
 | **Music** | Tracks browsable by mood and style, with the licence type surfaced on every row (Commercially Licensed, CC BY, CC0, Permission Required) and prototype play-state controls. |
 | **Rights Checker** | Eight-input, rule-based screening returning a lower / medium / high risk signal, what may be reusable, actions required before publishing, and a link to the governing statute for your jurisdiction. |
 
-Also included: hash-based routing, responsive layout down to 360px, keyboard-accessible controls,
+Also included: hash-based routing, responsive layout down to 320px, keyboard-accessible controls,
 `prefers-reduced-motion` support, a print stylesheet, and Open Graph metadata.
+
+### Pasting a link
+
+A URL can never match the reference library, so search treats one as a request to screen a source
+rather than as a failed query. The result is a platform-aware handoff card that reads the address as
+a string — no request is made to the platform — and reports:
+
+- the **platform** and the **content type** it implies (YouTube, Vimeo, streaming, social, photo
+  libraries, portfolios, Wikimedia, publishing platforms);
+- the **video ID** where one is parseable, for `watch?v=`, `youtu.be/`, `/shorts/`, `/embed/` and
+  `/live/` forms;
+- the platform's **default licence position** — the thing people most often get wrong. A public
+  YouTube video is under the Standard Licence with all rights reserved; availability is not
+  permission;
+- a button that carries the address into the Rights Checker **byte for byte**, with content type
+  pre-set and licence set to "unknown".
+
+The URL is deliberately never lowercased on the way through, because video IDs are case-sensitive:
+`fAfr-wqxY78` and `fafr-wqxy78` are different videos.
 
 ## Quick start
 
