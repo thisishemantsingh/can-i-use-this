@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#135C43"/>
+  <g transform="rotate(-16 32 35)">
+    <ellipse cx="32" cy="35" rx="26" ry="8.5" fill="none" stroke="#D9F45F" stroke-width="2.2" opacity=".9"/>
+  </g>
+  <text x="32" y="47" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif"
+        font-size="40" font-weight="700" fill="#FFFEFA">8</text>
+</svg>

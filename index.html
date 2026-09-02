@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Can I Use This? — Find creative work you can actually use.</title>
+<meta name="description" content="Discover creative references and understand whether content can be legally reused, which portions may be usable, and when permission is required. Educational prototype — not legal advice." />
+<meta name="color-scheme" content="light" />
+<meta name="theme-color" content="#135C43" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Can I Use This?" />
+<meta property="og:description" content="Find creative work you can actually use — search references, track trends, and screen copyright reuse risk." />
+<meta property="og:image" content="assets/img/og-cover.svg" />
+
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ============================ HEADER ============================ -->
+<header class="site-header" id="siteHeader">
+  <div class="shell header-inner">
+    <a class="brand" href="#home" aria-label="Can I Use This — home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 40 40" role="presentation">
+          <ellipse cx="20" cy="21" rx="17" ry="6" transform="rotate(-16 20 21)" fill="none" stroke="currentColor" stroke-width="1.6" opacity=".65"/>
+          <text x="20" y="29" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-size="26" font-weight="700" fill="currentColor">8</text>
+        </svg>
+      </span>
+      <span class="brand-text">Can I Use This<span class="brand-q">?</span></span>
+    </a>
+
+    <nav class="site-nav" id="siteNav" aria-label="Primary">
+      <a href="#home" data-nav="home">Search</a>
+      <a href="#trending" data-nav="trending">Trending</a>
+      <a href="#music" data-nav="music">Music</a>
+      <a href="#checker" data-nav="checker">Rights Checker</a>
+      <a href="#checker" class="btn btn-accent nav-cta">Check a source</a>
+    </nav>
+
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNav" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============================ SEARCH / HOME ============================ -->
+<section class="page" id="page-home" data-page="home">
+
+  <div class="hero">
+    <div class="hero-orbit" aria-hidden="true">
+      <svg viewBox="0 0 900 700" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <clipPath id="ringBack"><rect x="0" y="0" width="900" height="352" /></clipPath>
+          <clipPath id="ringFront"><rect x="0" y="352" width="900" height="348" /></clipPath>
+          <linearGradient id="eightFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#135C43" stop-opacity=".19" />
+            <stop offset="100%" stop-color="#135C43" stop-opacity=".08" />
+          </linearGradient>
+        </defs>
+
+        <g transform="rotate(-15 450 352)" clip-path="url(#ringBack)">
+          <ellipse cx="450" cy="352" rx="330" ry="94" class="ring ring-outer" />
+          <ellipse cx="450" cy="352" rx="268" ry="76" class="ring ring-inner" />
+        </g>
+
+        <text x="450" y="536" text-anchor="middle" class="hero-eight" fill="url(#eightFill)">8</text>
+
+        <g transform="rotate(-15 450 352)" clip-path="url(#ringFront)">
+          <ellipse cx="450" cy="352" rx="330" ry="94" class="ring ring-outer" />
+          <ellipse cx="450" cy="352" rx="268" ry="76" class="ring ring-inner" />
+        </g>
+      </svg>
+    </div>
+
+    <div class="shell hero-content">
+      <p class="eyebrow"><span class="dot"></span> Creative discovery &amp; copyright reuse</p>
+      <h1 class="hero-title">Find creative work you<br /><em>can actually use.</em></h1>
+      <p class="hero-sub">
+        Search references across images, video, music and campaigns — then see the licence,
+        what portion may be reusable, and when you still need permission.
+      </p>
+
+      <form class="searchbar" id="searchForm" role="search">
+        <svg class="searchbar-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16.5 16.5 21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <input id="searchInput" type="search" autocomplete="off" placeholder="Search a campaign, trend, song or creative idea…" aria-label="Search creative references" />
+        <button class="btn btn-primary" type="submit">Search</button>
+      </form>
+
+      <div class="hero-suggest">
+        <span>Try</span>
+        <button class="link-chip" data-suggest="surrealism">soft surrealism</button>
+        <button class="link-chip" data-suggest="typography">bold typography</button>
+        <button class="link-chip" data-suggest="ambient">ambient loops</button>
+        <button class="link-chip" data-suggest="public domain">public domain</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="shell">
+    <div class="filter-row" role="tablist" aria-label="Creative categories">
+      <button class="chip is-active" role="tab" aria-selected="true" data-quick="all">All Creative</button>
+      <button class="chip" role="tab" aria-selected="false" data-quick="image">Images</button>
+      <button class="chip" role="tab" aria-selected="false" data-quick="video">Video</button>
+      <button class="chip" role="tab" aria-selected="false" data-quick="music">Music</button>
+      <button class="chip" role="tab" aria-selected="false" data-quick="campaign">Campaigns</button>
+      <button class="chip chip-accent" role="tab" aria-selected="false" data-quick="free">Free to Reuse</button>
+    </div>
+
+    <details class="advanced" id="advanced">
+      <summary>
+        <span>Advanced filters</span>
+        <span class="adv-count" id="advCount" hidden>0 active</span>
+      </summary>
+      <div class="advanced-grid">
+        <label class="field">
+          <span class="field-label">Content Type</span>
+          <select id="fType">
+            <option value="">Any type</option>
+            <option value="image">Image</option>
+            <option value="video">Video</option>
+            <option value="music">Music</option>
+            <option value="campaign">Campaign</option>
+          </select>
+        </label>
+        <label class="field">
+          <span class="field-label">Licence</span>
+          <select id="fLicence">
+            <option value="">Any licence</option>
+            <option value="CC0">CC0 / Public Domain</option>
+            <option value="CC BY">Creative Commons Attribution</option>
+            <option value="CC BY-NC">Creative Commons Non-Commercial</option>
+            <option value="Commercial">Commercially Licensed</option>
+            <option value="All Rights Reserved">All Rights Reserved</option>
+          </select>
+        </label>
+        <label class="field">
+          <span class="field-label">Platform</span>
+          <select id="fPlatform">
+            <option value="">Any platform</option>
+            <option value="Archive">Archive / Museum</option>
+            <option value="Stock">Stock library</option>
+            <option value="Social">Social platform</option>
+            <option value="Brand">Brand channel</option>
+            <option value="Independent">Independent creator</option>
+          </select>
+        </label>
+        <label class="field">
+          <span class="field-label">Reuse Status</span>
+          <select id="fReuse">
+            <option value="">Any status</option>
+            <option value="free">Free to reuse</option>
+            <option value="attribution">Reuse with attribution</option>
+            <option value="limited">Limited / partial reuse</option>
+            <option value="permission">Permission required</option>
+          </select>
+        </label>
+      </div>
+      <div class="advanced-foot">
+        <button class="btn btn-ghost btn-sm" id="clearFilters" type="button">Clear all filters</button>
+      </div>
+    </details>
+
+    <div class="results-head">
+      <h2 class="section-title" id="resultsTitle">All creative references</h2>
+      <p class="results-meta" id="resultsMeta">—</p>
+    </div>
+
+    <div class="card-grid" id="results" aria-live="polite"></div>
+
+    <div class="empty" id="emptyState" hidden>
+      <p class="empty-title">No references match those filters.</p>
+      <p class="empty-sub">Try a broader search term or clear the advanced filters.</p>
+      <button class="btn btn-primary btn-sm" id="emptyReset" type="button">Reset search</button>
+    </div>
+
+    <p class="proto-note">
+      <strong>Prototype data.</strong> Results are illustrative sample records, not a live index of
+      licensed works. Always confirm the licence at the original source before publishing.
+    </p>
+  </div>
+</section>
+
+<!-- ============================ TRENDING ============================ -->
+<section class="page" id="page-trending" data-page="trending" hidden>
+  <div class="shell">
+    <div class="page-head">
+      <p class="eyebrow"><span class="dot"></span> Momentum report</p>
+      <h1 class="page-title">Creative formats <em>gaining speed.</em></h1>
+      <p class="page-sub">
+        Styles and formats picking up search demand and real usage across design, social, film and audio.
+        Each trend notes how safely the look itself can be borrowed.
+      </p>
+    </div>
+
+    <div class="filter-row" role="tablist" aria-label="Trend categories">
+      <button class="chip is-active" role="tab" aria-selected="true" data-trend="all">All Trends</button>
+      <button class="chip" role="tab" aria-selected="false" data-trend="Design">Design</button>
+      <button class="chip" role="tab" aria-selected="false" data-trend="Social">Social</button>
+      <button class="chip" role="tab" aria-selected="false" data-trend="Film">Film</button>
+      <button class="chip" role="tab" aria-selected="false" data-trend="Audio">Audio</button>
+    </div>
+
+    <div class="trend-grid" id="trendGrid" aria-live="polite"></div>
+
+    <p class="proto-note">
+      <strong>Prototype demonstration data.</strong> Growth figures, mentions and saves are sample
+      values for interface demonstration and are not measured analytics.
+    </p>
+  </div>
+</section>
+
+<!-- ============================ MUSIC ============================ -->
+<section class="page" id="page-music" data-page="music" hidden>
+  <div class="shell">
+    <div class="page-head">
+      <p class="eyebrow"><span class="dot"></span> Sound library</p>
+      <h1 class="page-title">Music by mood, style<br /><em>and usage rights.</em></h1>
+      <p class="page-sub">
+        Browse tracks with their licence type on the surface — so you know upfront whether a cue is
+        clearable, needs attribution, or needs a conversation.
+      </p>
+    </div>
+
+    <div class="filter-row" role="tablist" aria-label="Music categories">
+      <button class="chip is-active" role="tab" aria-selected="true" data-music="Trending">Trending</button>
+      <button class="chip" role="tab" aria-selected="false" data-music="Cinematic">Cinematic</button>
+      <button class="chip" role="tab" aria-selected="false" data-music="Electronic">Electronic</button>
+      <button class="chip" role="tab" aria-selected="false" data-music="Ambient">Ambient</button>
+      <button class="chip" role="tab" aria-selected="false" data-music="Upbeat">Upbeat</button>
+    </div>
+
+    <ol class="tracklist" id="trackList" aria-live="polite"></ol>
+
+    <p class="proto-note">
+      <strong>Visual prototype controls.</strong> Play buttons demonstrate player state only — no audio
+      files are bundled, and licence labels are sample metadata.
+    </p>
+  </div>
+</section>
+
+<!-- ============================ RIGHTS CHECKER ============================ -->
+<section class="page" id="page-checker" data-page="checker" hidden>
+  <div class="shell">
+    <div class="page-head">
+      <p class="eyebrow"><span class="dot"></span> Rights checker</p>
+      <h1 class="page-title">Screen a source <em>before you publish.</em></h1>
+      <p class="page-sub">
+        Answer eight questions about what you are reusing and how. You will get a risk signal, what may
+        be reusable, the actions to take first, and the law that applies where you publish.
+      </p>
+    </div>
+
+    <div class="checker-layout">
+      <form class="checker-form panel" id="checkerForm" novalidate>
+        <div class="field">
+          <label class="field-label" for="cSource">Source URL, text or file details</label>
+          <textarea id="cSource" rows="3" placeholder="https://example.com/photo — or describe the file, e.g. “12s clip from a 2019 music video”" required></textarea>
+          <p class="field-hint">Not fetched or analysed automatically in this prototype.</p>
+        </div>
+
+        <div class="field-pair">
+          <label class="field">
+            <span class="field-label">Publishing jurisdiction</span>
+            <select id="cJurisdiction">
+              <option value="india">India</option>
+              <option value="us">United States</option>
+              <option value="uk">United Kingdom</option>
+              <option value="eu">European Union</option>
+              <option value="other">Other or multiple countries</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="field-label">Content type</span>
+            <select id="cType">
+              <option value="image">Image / photograph</option>
+              <option value="video">Video / film</option>
+              <option value="music">Music / sound recording</option>
+              <option value="text">Text / article</option>
+              <option value="design">Design / illustration</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="field-pair">
+          <label class="field">
+            <span class="field-label">Licence or permission</span>
+            <select id="cLicence">
+              <option value="cc0">CC0 / public domain</option>
+              <option value="ccby">Creative Commons Attribution</option>
+              <option value="ccbync">Creative Commons Non-Commercial</option>
+              <option value="licensed">Licence purchased / written permission</option>
+              <option value="none">All rights reserved</option>
+              <option value="unknown" selected>Unknown</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="field-label">Intended purpose</span>
+            <select id="cPurpose">
+              <option value="commercial" selected>Commercial / brand work</option>
+              <option value="editorial">Editorial / news reporting</option>
+              <option value="education">Education / research</option>
+              <option value="review">Criticism, review or parody</option>
+              <option value="personal">Personal, non-public</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="cAmount">
+            Amount being reused <output class="range-out" id="cAmountOut">25%</output>
+          </label>
+          <input type="range" id="cAmount" min="1" max="100" value="25" step="1" />
+          <div class="range-scale"><span>A short excerpt</span><span>The whole work</span></div>
+        </div>
+
+        <fieldset class="field switches">
+          <legend class="field-label">Context</legend>
+          <label class="switch">
+            <input type="checkbox" id="cTransform" />
+            <span class="switch-ui" aria-hidden="true"></span>
+            <span class="switch-text">
+              <strong>Transformative context</strong>
+              <em>New meaning, commentary or substantial creative change</em>
+            </span>
+          </label>
+          <label class="switch">
+            <input type="checkbox" id="cAttribution" checked />
+            <span class="switch-ui" aria-hidden="true"></span>
+            <span class="switch-text">
+              <strong>Creator attribution</strong>
+              <em>Original creator will be credited visibly</em>
+            </span>
+          </label>
+        </fieldset>
+
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit">Assess reuse risk</button>
+          <button class="btn btn-ghost" type="reset" id="checkerReset">Reset</button>
+        </div>
+      </form>
+
+      <div class="checker-result" id="checkerResult" aria-live="polite">
+        <div class="panel result-placeholder" id="resultPlaceholder">
+          <span class="placeholder-mark" aria-hidden="true">
+            <svg viewBox="0 0 64 64"><ellipse cx="32" cy="34" rx="27" ry="9" transform="rotate(-16 32 34)" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".5"/><text x="32" y="46" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-size="42" font-weight="700" fill="currentColor" opacity=".25">8</text></svg>
+          </span>
+          <h2 class="placeholder-title">Your screening appears here</h2>
+          <p class="placeholder-sub">
+            Fill in the source and context, then run the assessment. Nothing you type leaves your
+            browser — the check runs locally on this page.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="disclaimer panel">
+      <h2 class="disclaimer-title">This is educational screening, not legal advice</h2>
+      <p>
+        “Can I Use This?” provides simplified, rule-based information and risk indicators only. It does
+        not provide legal advice, does not guarantee that any reuse is lawful, and does not replace
+        consultation with a qualified copyright lawyer. Fair dealing and fair use are decided
+        case by case — a low-risk signal here is not a clearance.
+      </p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================ FOOTER ============================ -->
+<footer class="site-footer">
+  <div class="shell footer-inner">
+    <div class="footer-brand">
+      <span class="brand-text">Can I Use This<span class="brand-q">?</span></span>
+      <p>Creative discovery, with the rights question answered up front.</p>
+      <p class="footer-status">Interactive frontend prototype</p>
+    </div>
+
+    <div class="footer-col">
+      <h3>Explore</h3>
+      <a href="#home">Search</a>
+      <a href="#trending">Trending</a>
+      <a href="#music">Music</a>
+      <a href="#checker">Rights Checker</a>
+    </div>
+
+    <div class="footer-col">
+      <h3>Primary legal sources</h3>
+      <a href="https://copyright.gov.in/Copyright_Act_1957/chapter_xi.html" target="_blank" rel="noopener noreferrer">India — Copyright Act 1957, s.52</a>
+      <a href="https://www.copyright.gov/fair-use/" target="_blank" rel="noopener noreferrer">US — Copyright Act, s.107</a>
+      <a href="https://www.gov.uk/guidance/exceptions-to-copyright" target="_blank" rel="noopener noreferrer">UK — CDPA exceptions</a>
+      <a href="https://eur-lex.europa.eu/eli/dir/2001/29/oj" target="_blank" rel="noopener noreferrer">EU — Directive 2001/29/EC</a>
+    </div>
+  </div>
+
+  <div class="shell footer-bottom">
+    <p>Educational information and risk indicators only — not legal advice.</p>
+    <p>Built as an open prototype. <a href="README.md">Read the docs</a></p>
+  </div>
+</footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

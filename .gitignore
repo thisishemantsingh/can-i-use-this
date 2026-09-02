@@ -1,0 +1,24 @@
+# OS
+.DS_Store
+._*
+Thumbs.db
+desktop.ini
+
+# Editors
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.sublime-*
+
+# Local servers / tooling
+node_modules/
+.cache/
+dist/
+.parcel-cache/
+*.log
+npm-debug.log*
+
+# Env
+.env
+.env.local

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#F5F3EC"/>
+  <g opacity=".9">
+    <g transform="rotate(-15 900 330)">
+      <ellipse cx="900" cy="330" rx="300" ry="88" fill="none" stroke="#135C43" stroke-width="2" opacity=".3"/>
+      <ellipse cx="900" cy="330" rx="246" ry="72" fill="none" stroke="#135C43" stroke-width="1" opacity=".2"/>
+    </g>
+    <text x="900" y="470" text-anchor="middle" font-family="Georgia, serif" font-size="420"
+          font-weight="700" fill="#135C43" opacity=".13">8</text>
+  </g>
+  <text x="80" y="250" font-family="Georgia, serif" font-size="72" font-weight="700" fill="#16231E">Find creative work</text>
+  <text x="80" y="330" font-family="Georgia, serif" font-size="72" font-weight="700" font-style="italic" fill="#135C43">you can actually use.</text>
+  <text x="80" y="400" font-family="Helvetica, Arial, sans-serif" font-size="26" fill="#5B6B64">Search references · track trends · screen copyright reuse risk</text>
+  <rect x="80" y="452" width="232" height="44" rx="22" fill="#D9F45F"/>
+  <text x="196" y="481" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="18"
+        font-weight="600" fill="#0D4432">Can I Use This?</text>
+</svg>
