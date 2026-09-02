@@ -398,6 +398,12 @@ select:focus,textarea:focus{outline:none;border-color:var(--primary);box-shadow:
 .handoff-title{font-size:1.32rem}
 .handoff-sub{color:var(--muted);font-size:.94rem;max-width:62ch}
 
+.handoff-multi{
+  width:100%;font-size:.85rem;font-weight:500;color:var(--primary-deep);
+  padding:9px 13px;border-radius:var(--r-sm);
+  background:rgba(217,244,95,.34);border:1px solid rgba(19,92,67,.2);
+}
+
 .handoff-facts{
   display:grid;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));
   gap:1px;margin:2px 0 0;width:100%;

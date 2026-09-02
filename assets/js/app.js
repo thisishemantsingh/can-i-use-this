@@ -86,7 +86,7 @@
 
   // `query` is lowercased for matching; `raw` preserves what was typed, because
   // URLs are case-sensitive (a YouTube id like fAfr-wqxY78 must survive intact).
-  const state = { query: '', raw: '', quick: 'all', type: '', licence: '', platform: '', reuse: '' };
+  const state = { query: '', raw: '', url: null, quick: 'all', type: '', licence: '', platform: '', reuse: '' };
 
   const resultsEl = $('#results');
   const emptyEl = $('#emptyState');
@@ -105,14 +105,26 @@
   };
 
   /*
-   * A pasted link cannot match the reference library, so it is treated as a
-   * different intent: screen this source. Deliberately conservative — a plain
-   * phrase like "soft surrealism" must not be read as a URL.
+   * Find links anywhere in the field, not just when the whole field is one.
+   * Changing a link by pasting a second one leaves both in the box, and people
+   * type around a link ("check this <url>"); either used to fall through to a
+   * text search and dead-end on "no references match".
+   *
+   * A URL never contains whitespace, so splitting on it is safe. A scheme-less
+   * token must end in a known TLD, so ordinary phrases are not mistaken for
+   * links.
    */
-  const isLikelyUrl = (q) => (
-    /^(https?:\/\/|www\.)\S+$/i.test(q) ||
-    /^[\w-]+(\.[\w-]+)+(\/\S*)?$/.test(q)
-  );
+  const COMMON_TLD = /\.(?:com|org|net|io|be|tv|co|in|uk|us|de|fr|jp|cn|br|ru|es|it|nl|se|no|au|ca|ch|me|app|dev|ai|gov|edu|info|biz|xyz|online|studio|design|art|fm|to|ly|gl|gg)(?:$|[/?#:])/i;
+
+  function findUrls(text) {
+    return (text.match(/\S+/g) || []).reduce((acc, token) => {
+      // Trailing sentence punctuation is not part of the address.
+      const t = token.replace(/[)\]}.,;:!?'"]+$/, '');
+      if (!t) return acc;
+      if (/^https?:\/\//i.test(t) || /^www\./i.test(t) || COMMON_TLD.test(t)) acc.push(t);
+      return acc;
+    }, []);
+  }
 
   /*
    * Recognise the platform behind a pasted link. Pasted YouTube links are the
@@ -124,6 +136,16 @@
    * platform is inferred from the string only.
    */
   const PLATFORMS = [
+    {
+      match: /music\.youtube\.com/i,
+      name: 'YouTube Music',
+      type: 'music',
+      swatch: 'bloom',
+      id: /[?&]v=([\w-]{11})/i,
+      idLabel: 'Track ID',
+      licence: 'Playback only',
+      note: 'A YouTube Music link is a streaming link: it licences listening, never reuse. Music also carries two separate layers \u2014 the sound recording (master) and the composition (publishing) \u2014 and both need clearing before a track goes into anything you publish.'
+    },
     {
       match: /(?:youtube\.com|youtu\.be)/i,
       name: 'YouTube',
@@ -254,7 +276,7 @@
       </article>`;
   }
 
-  function renderHandoff(url) {
+  function renderHandoff(url, total) {
     const src = readSource(url);
     const host = hostOf(url);
 
@@ -277,6 +299,12 @@
     // Column count tracks the fact count, so the grid never leaves an empty cell.
     factsEl.style.setProperty('--cols', facts.filter(([, , cls]) => !cls).length);
 
+    const multi = $('#handoffMulti');
+    multi.hidden = total < 2;
+    if (total > 1) {
+      multi.textContent = `${total} links are in the search box — screening the last one. Clear the search if you meant a different one.`;
+    }
+
     $('#handoffNote').textContent = src.note;
     $('#handoffHint').textContent = host
       ? `No request is made to ${host} — the platform is inferred from the address alone, so the licence and context are still yours to confirm.`
@@ -284,27 +312,37 @@
   }
 
   function renderResults() {
-    const hits = CREATIVE_WORKS.filter(matches);
-
-    const asUrl = state.raw && isLikelyUrl(state.raw);
-
-    resultsEl.innerHTML = hits.map(cardMarkup).join('');
-    handoffEl.hidden = !(asUrl && hits.length === 0);
-    emptyEl.hidden = hits.length > 0 || !handoffEl.hidden;
-
-    if (asUrl) renderHandoff(state.raw);
-
-    titleEl.textContent = asUrl
-      ? 'Link detected'
-      : state.raw
-        ? `Results for “${state.raw}”`
-        : QUICK_TITLES[state.quick];
-
-    metaEl.textContent = `${hits.length} of ${CREATIVE_WORKS.length} references`;
-
     const active = ['type', 'licence', 'platform', 'reuse'].filter((k) => state[k]).length;
     advCountEl.hidden = active === 0;
     advCountEl.textContent = `${active} active`;
+
+    const urls = findUrls(state.raw);
+    // The most recent link wins: changing a link usually means appending one.
+    state.url = urls.length ? urls[urls.length - 1] : null;
+
+    if (state.url) {
+      // Matching a URL against the library only ever yields noise (a link
+      // containing "music" would "find" every music record), so skip it.
+      resultsEl.innerHTML = '';
+      emptyEl.hidden = true;
+      handoffEl.hidden = false;
+      renderHandoff(state.url, urls.length);
+      titleEl.textContent = 'Link detected';
+      metaEl.textContent = urls.length > 1 ? `${urls.length} links found` : 'not a library search';
+      return;
+    }
+
+    const hits = CREATIVE_WORKS.filter(matches);
+
+    handoffEl.hidden = true;
+    resultsEl.innerHTML = hits.map(cardMarkup).join('');
+    emptyEl.hidden = hits.length > 0;
+
+    titleEl.textContent = state.raw
+      ? `Results for “${state.raw}”`
+      : QUICK_TITLES[state.quick];
+
+    metaEl.textContent = `${hits.length} of ${CREATIVE_WORKS.length} references`;
   }
 
   function setQuery(value) {
@@ -368,7 +406,7 @@
   bindSelect('#fReuse', 'reuse');
 
   function resetSearch() {
-    Object.assign(state, { query: '', raw: '', quick: 'all', type: '', licence: '', platform: '', reuse: '' });
+    Object.assign(state, { query: '', raw: '', url: null, quick: 'all', type: '', licence: '', platform: '', reuse: '' });
     $('#searchInput').value = '';
     ['#fType', '#fLicence', '#fPlatform', '#fReuse'].forEach((id) => { $(id).value = ''; });
     syncQuickChips();
@@ -376,9 +414,10 @@
   }
 
   $('#handoffGo').addEventListener('click', () => {
-    const src = readSource(state.raw);
+    if (!state.url) return;
+    const src = readSource(state.url);
 
-    $('#cSource').value = state.raw;
+    $('#cSource').value = state.url;
     $('#cType').value = src.type;
     // A pasted link is exactly the "licence not established yet" case.
     $('#cLicence').value = 'unknown';

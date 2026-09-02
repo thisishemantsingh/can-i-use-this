@@ -48,8 +48,22 @@ Also included: hash-based routing, responsive layout down to 320px, keyboard-acc
 ### Pasting a link
 
 A URL can never match the reference library, so search treats one as a request to screen a source
-rather than as a failed query. The result is a platform-aware handoff card that reads the address as
-a string — no request is made to the platform — and reports:
+rather than as a failed query. A link is detected **anywhere in the field**, so all of these work:
+
+```
+https://www.youtube.com/watch?v=fAfr-wqxY78
+youtu.be/fAfr-wqxY78?si=Xy12ab          scheme-less and bare-domain forms
+check this https://youtu.be/…           a link with text around it
+<old link> <new link>                   pasting a new link without clearing the old
+```
+
+Where more than one link is present the **last** one is used, since changing a link usually means
+appending one, and the card says so rather than guessing silently. A scheme-less token has to end in
+a known TLD, so ordinary queries (`soft surrealism`, `Vol.II`, `e.g. bold type`) still search
+normally.
+
+The result is a platform-aware handoff card that reads the address as a string — no request is made
+to the platform — and reports:
 
 - the **platform** and the **content type** it implies (YouTube, Vimeo, streaming, social, photo
   libraries, portfolios, Wikimedia, publishing platforms);
