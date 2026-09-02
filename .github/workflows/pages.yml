@@ -25,12 +25,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # enablement: true provisions Pages on first run, so a fresh fork does not
-      # need Settings -> Pages touched by hand.
+      # Note: no `enablement: true` here. GITHUB_TOKEN cannot create a Pages
+      # site (needs admin), so Pages must be switched on once in repo settings.
       - name: Configure Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - name: Upload site
         uses: actions/upload-pages-artifact@v3

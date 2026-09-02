@@ -68,16 +68,23 @@ Then visit <http://localhost:8080>.
 ## Deploying to GitHub Pages
 
 The workflow at [`.github/workflows/pages.yml`](.github/workflows/pages.yml) publishes the site on
-every push to `main`. It passes `enablement: true`, so it turns Pages on itself the first time it
-runs — you do not need to touch **Settings → Pages** manually.
+every push to `main`. This copy is live at
+**<https://thisishemantsingh.github.io/can-i-use-this/>**.
 
-This copy is live at **<https://thisishemantsingh.github.io/can-i-use-this/>**.
+If you fork it, enable Pages once before the workflow can deploy:
 
-Two things worth knowing if you fork it:
+1. **Settings → Pages → Source → GitHub Actions.**
+2. Push to `main`.
 
-- GitHub Pages requires a **public** repository on the Free plan. On a private repo the deploy fails
-  with `Your current plan does not support GitHub Pages for this repository`; that needs GitHub Pro
-  or a static host like Netlify or Cloudflare Pages instead.
+That first step cannot be automated from inside the workflow: creating a Pages site needs admin
+rights, and the job's `GITHUB_TOKEN` does not have them, so `configure-pages` fails with
+`Resource not accessible by integration`.
+
+Two other things worth knowing:
+
+- GitHub Pages needs a **public** repository on the Free plan. On a private repo the deploy fails
+  with `Your current plan does not support GitHub Pages for this repository` — that requires GitHub
+  Pro, or a host like Netlify or Cloudflare Pages instead.
 - All asset paths are relative, so the site works from a subdirectory without configuration.
 
 ## Project structure
